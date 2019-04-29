@@ -15,13 +15,13 @@ export default ({ data }) => {
             border-bottom: 1px solid;
           `}
         >
-          Amazing Pandas Eating Things
+          Pages Pulled from Wordpress Dynamically!
         </h1>
-        <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
-        {data.allMarkdownRemark.edges.map(({ node }) => (
+        <h4>{data.allWordpressPage.totalCount} Pages</h4>
+        {data.allWordpressPage.edges.map(({ node }) => (
           <div key={node.id}>
             <Link
-              to={node.fields.slug}
+              to={node.slug}
               css={css`
                 text-decoration: none;
                 color: inherit;
@@ -31,16 +31,16 @@ export default ({ data }) => {
                 margin-bottom: ${rhythm(1 / 4)};
               `}
             >
-              {node.frontmatter.title}{" "}
+              {node.title}{" "}
               <span
                 css={css`
-                  color: #bbb;
+                  color: #bbb;  
                 `}
               >
-                — {node.frontmatter.date}
+                — {node.date}
               </span>
             </h3>
-            <p>{node.excerpt}</p>
+            <p dangerouslySetInnerHTML={{__html: node.excerpt}}/> 
             </Link>
           </div>
         ))}
@@ -50,22 +50,19 @@ export default ({ data }) => {
 }
 
 export const query = graphql`
-  query {
-    allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
-     totalCount
-      edges {
-        node {
-          id
-          frontmatter {
-            title
-            date(formatString: "DD MMMM, YYYY")
-          }
-          fields {
-            slug
-          }
-          excerpt
-        }
+{
+  allWordpressPage {
+    totalCount
+    edges {
+      node {
+        id
+  			date(formatString: "MMMM Do, YYYY")
+        slug
+        title
+        excerpt
+        
       }
     }
   }
+}
 `
